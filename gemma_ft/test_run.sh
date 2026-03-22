@@ -7,6 +7,9 @@
 
 set -e
 
+# 避免 CUDA 記憶體碎片化 (RTX 5090 OOM fix)
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+
 REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
 DATA_PATH="$REPO_ROOT/dataset/test_5clips.json"
 IMAGE_FOLDER="$REPO_ROOT/dataset"
@@ -51,7 +54,7 @@ uv run deepspeed \
     --eval_strategy "no" \
     --save_strategy "no" \
     \
-    --gradient_checkpointing False \
+    --gradient_checkpointing True \
     --logging_steps 1 \
     --dataloader_num_workers 0 \
     --report_to "none"

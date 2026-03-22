@@ -17,6 +17,9 @@
 
 set -e  # 任何指令失敗即停止
 
+# 避免 CUDA 記憶體碎片化 (RTX 5090 OOM fix)
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+
 MODEL_NAME="${MODEL_NAME:-google/gemma-3-4b-it}"
 DATA_PATH="${DATA_PATH:-/path/to/your/data.json}"
 IMAGE_FOLDER="${IMAGE_FOLDER:-/path/to/your/images}"
