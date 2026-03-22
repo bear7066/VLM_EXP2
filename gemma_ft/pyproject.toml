@@ -1,0 +1,20 @@
+[project]
+name = "gemma-ft"
+version = "0.1.0"
+description = "Gemma3 Stage 1 fine-tune (vision tower + projector)"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "accelerate==1.6.0",
+    "deepspeed==0.16.7",
+    "numpy==2.1.2",
+    "pillow==11.0.0",
+    "requests==2.32.3",
+    "safetensors==0.5.3",
+    "torch==2.6.0",
+    "torchaudio==2.6.0",
+    "torchvision==0.21.0",
+    "tqdm==4.67.1",
+    "transformers==4.51.3",
+    "ujson==5.10.0",
+    "yt-dlp",
+]
