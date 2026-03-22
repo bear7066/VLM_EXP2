@@ -5,6 +5,7 @@ description = "Gemma3 Stage 1 fine-tune (vision tower + projector)"
 requires-python = ">=3.11,<3.12"
 dependencies = [
     "accelerate==1.6.0",
+    "bitsandbytes",
     "deepspeed==0.16.7",
     "setuptools",
     "numpy==2.1.2",

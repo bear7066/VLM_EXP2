@@ -43,6 +43,7 @@ uv run deepspeed \
     --per_device_eval_batch_size 1 \
     --gradient_accumulation_steps 1 \
     --max_steps 2 \
+    --optim "paged_adamw_8bit" \
     \
     --learning_rate 1e-5 \
     --vision_lr 2e-5 \
