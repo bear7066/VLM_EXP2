@@ -128,8 +128,12 @@ class SupervisedDataset(Dataset):
 
         return data
 
-    # check: 1. len of samples 2. sample message(samples[i]["messages"])
-   
+    def __len__(self) -> int:
+        return len(self.samples)
+
+    def __getitem__(self, i: int) -> Dict[str, torch.Tensor]:
+        return self._build_sample(self.samples[i]["messages"])
+
 class DataCollatorForSupervisedDataset:
     """
     右側 Padding Collator。
