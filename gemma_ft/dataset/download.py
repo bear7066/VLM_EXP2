@@ -107,11 +107,23 @@ def download_clip(clip: dict) -> tuple[str, bool, str]:
         return folder_name, False, "yt-dlp timeout"
 
     # ── Step 2: Extract frames ──
-    duration = end - start   # seconds
-    # Timestamps: evenly spaced within the clip
-    # clip was downloaded starting from `start` sec, so local time within the file
-    # Using select filter: pick frames at positions 1/(N+1), 2/(N+1), ... N/(N+1) of duration
-    timestamps = [duration * (i + 1) / (NUM_FRAMES + 1) for i in range(NUM_FRAMES)]
+    # 取得下載下來的影片真實長度（以防影片太短，或是 cut 不精準）
+    probe_cmd = [
+        "ffprobe", "-v", "error", "-show_entries",
+        "format=duration", "-of",
+        "default=noprint_wrappers=1:nokey=1", str(tmp_mp4)
+    ]
+    try:
+        actual_duration_str = subprocess.check_output(probe_cmd, text=True).strip()
+        actual_duration = float(actual_duration_str)
+    except Exception:
+        actual_duration = end - start  # fallback
+
+    # 如果影片小於 0.1 秒，或者有問題
+    if actual_duration <= 0.1:
+        actual_duration = end - start
+
+    timestamps = [actual_duration * (i + 1) / (NUM_FRAMES + 1) for i in range(NUM_FRAMES)]
 
     for i, ts in enumerate(timestamps, start=1):
         out_frame = out_dir / f"frame_{i}.jpg"
@@ -149,7 +161,7 @@ def download_clip(clip: dict) -> tuple[str, bool, str]:
 
 def main():
     parser = argparse.ArgumentParser(description="Download Kinetics-4K clips and extract frames")
-    parser.add_argument("--limit",   type=int, default=None, help="Max clips to process (for testing)")
+    parser.add_argument("--limit",  type=int, default=None, help="Max clips to process (for testing)")
     parser.add_argument("--workers", type=int, default=4,    help="Parallel download workers")
     args = parser.parse_args()
 
